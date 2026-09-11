@@ -129,12 +129,12 @@
             currentCount = data.count;
             countValueElem.textContent = currentCount;
 
-          supabaseClient
+         supabaseClient
             .channel('public:counter')
             .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'counter' }, (payload) => {
                 const serverCount = payload.new.count;
-                // サーバーの数値が現在の自分の数値よりも大きい場合のみ反映する
-                if (serverCount > currentCount) {
+                // 自分の数値より大きい場合、または 0 にリセットされた場合のみ反映する
+                if (serverCount > currentCount || serverCount === 0) {
                     currentCount = serverCount;
                     countValueElem.textContent = currentCount;
                 }
